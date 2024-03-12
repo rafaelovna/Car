@@ -1,6 +1,8 @@
 package transport;
 
-public class Car {
+import java.util.Objects;
+
+public class Car extends Transport{
 
     public static class Key {
         public final boolean remoteRun;
@@ -26,12 +28,7 @@ public class Car {
         }
     }
 
-    private final String brand;
-    private final String model;
     private Double engineVolume;
-    private String color;
-    private final Integer year;
-    private final String country;
     private String gear;
     private String typeOfBody;
     private String regNumber;
@@ -39,40 +36,26 @@ public class Car {
     private boolean summerTires;
     private Key key;
 
-
-
     public Car(String brand
             , String model
-            , Double engineVolume
             , String color
             , Integer year
             , String country
+            , int maxMovementSpeed
+            , Double engineVolume
             , String gear
             , String typeOfBody
             , String regNumber
             , int capacity
             , boolean summerTires
-            , Key key
-            ) {
-
-        if (brand == null || brand.isEmpty()) {
-            brand = "default";
-        }
-        this.brand = brand;
-        if (model == null || model.isEmpty()) {
-            model = "default";
-        }
-        this.model = model;
+            , Key key) {
+        super(brand,
+                model,
+                color,
+                year,
+                country,
+                maxMovementSpeed);
         setEngineVolume(engineVolume);
-        setColor(color);
-        if (year <= 0) {
-            year = 2000;
-        }
-        this.year = year;
-        if (country == null || country.isEmpty()) {
-            country = "default";
-        }
-        this.country = country;
         setGear(gear);
         if (typeOfBody == null || typeOfBody.isEmpty()) {
             typeOfBody = "седан";
@@ -96,14 +79,6 @@ public class Car {
         }
     }
 
-    public String getBrand() {
-        return brand;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
     public Double getEngineVolume() {
         return engineVolume;
     }
@@ -115,24 +90,6 @@ public class Car {
         this.engineVolume = engineVolume;
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        if (color == null || color.isEmpty()) {
-            color = "white";
-        }
-        this.color = color;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public String getCountry() {
-        return country;
-    }
 
     public String getGear() {
         return gear;
@@ -188,13 +145,35 @@ public class Car {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Car car = (Car) o;
+        return capacity == car.capacity
+                && summerTires == car.summerTires
+                && Objects.equals(engineVolume, car.engineVolume)
+                && Objects.equals(gear, car.gear)
+                && Objects.equals(typeOfBody, car.typeOfBody)
+                && Objects.equals(regNumber, car.regNumber)
+                && Objects.equals(key, car.key);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(),
+                engineVolume,
+                gear,
+                typeOfBody,
+                regNumber,
+                capacity,
+                summerTires,
+                key);
+    }
+
+    @Override
     public String toString() {
-        return "Автомобиль: " + brand +
-                ". Модель: " + model +
-                ". Объем двигателя в литрах - " + engineVolume +
-                ". Цвет кузова: " + color +
-                ". Год производства: " + year +
-                ". Страна сборки: " + country +
+        return "Объем двигателя в литрах - " + engineVolume +
                 ". Коробка передач: " + gear +
                 ". Тип кузова - " + typeOfBody +
                 ". Регистрационный номер: " + regNumber +
